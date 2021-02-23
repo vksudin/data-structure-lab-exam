@@ -1,0 +1,68 @@
+#include<iostream>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct node{
+    int data;
+    struct node *next;
+};
+
+struct node *head;
+int c=0;
+
+void push(int data)
+{
+    struct node *temp=(struct node*)malloc(sizeof(struct node));
+    
+    temp->data=data;
+    
+    temp->next=head;
+    
+    head=temp;
+    c++;
+    
+}
+
+bool isEmpty()
+{
+    return (head==NULL);
+}
+
+bool isFull()
+{
+    return (c==10);
+}
+
+void pop()
+{
+    if(isEmpty())
+    {
+        cout<<"underflow:"<<"\n";
+        return;
+    }
+    struct node *temp=head;
+    head=head->next;
+    free(temp);
+}
+
+void display()
+{
+    struct node *temp=head;
+    
+    while(temp!=NULL)
+    {
+        cout<<temp->data<<"\n";
+        temp=temp->next;
+    }
+}
+
+
+int main()
+{
+    push(10);
+    push(20);
+    push(30);
+    pop();
+    display();
+}
