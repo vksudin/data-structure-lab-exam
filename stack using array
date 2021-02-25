@@ -1,0 +1,109 @@
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+#define MAX 1000
+
+class stac{
+  public:
+  int top;
+  int arr[MAX];
+  stac()
+  {
+      top=-1;
+  }
+  void push(int x)
+  {
+      if(top==MAX-1)
+      {
+          cout<<"Stack is full"<<"\n";
+          return;
+      }
+      else
+      {
+          top++;
+          arr[top]=x;
+      }
+  }
+  
+  void pop()
+  {
+      if(top==-1)
+      {
+          cout<<"Stack is empty"<<"\n";
+          return;
+      }
+      else
+      {
+          int item=arr[top];
+          top--;
+          cout<<"The popped element is:"<<item<<"\n";
+      }
+  }
+    
+  int peek()
+  {
+      if(top==-1)
+      {
+          cout<<"Stack is empty:"<<"\n";
+          return INT_MIN;
+      }
+      else
+      {
+          return arr[top];
+      }
+  }
+  
+  void display()
+  {
+      int i;
+      if(top==-1)
+      {
+          cout<<"Stack is empty:"<<"\n";
+          return;
+      }
+      for(i=top;i>=0;i--)
+      {
+          cout<<arr[i]<<" ";
+      }
+      cout<<"\n";
+  }
+
+};
+
+int main()
+{
+    
+    stac s;
+    int choice;
+    int a,b;
+    while(1)
+    {
+        cout<<"1 for push"<<"\n";
+         cout<<"2 for pop"<<"\n";
+          cout<<"3 for peek"<<"\n";
+          cout<<"4 for display"<<"\n";
+        cin>>choice;
+        switch(choice)
+        {
+            case 1:
+            cout<<"Enter the value to be pushed"<<"\n";
+            cin>>a;
+            s.push(a);
+            break;
+            case 2:
+            s.pop();
+            break;
+            case 3:
+            cout<<s.peek()<<"\n";
+            break;
+            case 4:
+            s.display();
+            break;
+            default:
+            exit(0);
+        }
+    }
+    
+    
+}
