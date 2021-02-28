@@ -1,0 +1,243 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+int c=0;
+//this variable is only for count the total node of the linked list
+
+
+//create a list 
+class Node{
+    public:
+    int data;
+    Node *next;
+};
+
+
+//function for print the list
+void printList(Node *head)
+{
+    while(head!=NULL)
+    {
+        cout<<head->data<<"\n";
+        head=head->next;
+    }
+}
+
+
+//function for insert at the beginning of the list
+Node *insertAtFirst(int val,Node *head)
+{
+    Node *newnode;
+    newnode=new Node();
+    newnode->data=val;
+    newnode->next=head;
+    c++;
+    return newnode;
+}
+
+//function for insert at the end of the list
+Node *insertAtEnd(int val,Node *head)
+{
+    if(head==NULL)
+    {
+        head=new Node();
+        head->data=val;
+        return head;
+    }
+    Node *temp=head;
+    
+    Node *newnode=new Node();
+    
+    newnode->data=val;
+    
+    while(head->next!=NULL)
+    head=head->next;
+    
+    c++;
+    head->next=newnode;
+    //newnode->next=NULL;
+    return temp;
+}
+
+//function for insert node at a given position
+void insertAtPos(int val,Node *head,int pos)
+{
+    if(pos>c)
+    {
+        cout<<"Invaild position:"<<"\n";
+        return;
+    }
+    Node *newnode;
+    newnode=new Node();
+    Node *temp=head;
+    int i=1;
+    while(i<pos)
+    {
+        temp=temp->next;
+        i++;
+    }
+    newnode->data=val;
+    newnode->next=temp->next;
+    temp->next=newnode;
+    c++;
+}
+
+
+//function for deleteing the first node of linked list
+Node *delAtFirst(Node *head)
+{
+    if(head==NULL)
+    return head;
+    
+    Node *temp=head;
+    
+    head=head->next;
+    
+    free(temp);
+    c--;
+    return head;
+}
+
+//function for deleting the last node of the linked list
+Node *delAtEnd(Node *head)
+{
+    if(head==NULL)
+    return head;
+    
+    if(head->next==NULL)
+    {
+        free(head);
+        return NULL;
+    }
+    
+    Node *temp=head;
+    
+    while(head->next->next!=NULL)
+    {
+        head=head->next;
+    }
+    
+    Node *lastnode=head->next;
+    
+    head->next=NULL;
+    
+    free(lastnode);
+    c--;
+    return temp;
+}
+
+//function of delete a particular node of linked list
+void deleteNode(Node **head,int val)
+{
+    if(head==NULL)
+    return;
+    Node *curr=*head;
+    Node *prev=NULL;
+    
+    if(curr->data==val)
+    {
+        *head=curr->next;
+        free(curr);
+        return;
+    }
+    
+    while(curr!=NULL && curr->data!=val)
+    {
+        prev=curr;
+        curr=curr->next;
+    }
+    
+    if(curr==NULL)
+    return;
+    
+    prev->next=curr->next;
+    
+    free(curr);
+    
+    c--;
+}
+
+
+//function for reverse the linked list
+Node *reverseList(Node *head)
+{
+    if(head==NULL)
+    return head;
+    Node *prev=NULL;
+    Node *curr=head;
+    Node *next;
+    
+    while(curr!=NULL)
+    {
+        next=curr->next;
+        Node *temp=curr;
+        temp->next=prev;
+        prev=curr;
+        curr=next;
+    }
+    return prev;
+}
+
+
+int main()
+{
+    Node *head=NULL;
+    int choice ,val,pos;
+    while(1)
+    {
+        cout<<"1 for insert at beginning:"<<"\n";
+        cout<<"2 for insert at end:"<<"\n";
+        cout<<"3 for insert at given position:"<<"\n";
+        cout<<"4 for delete at beginning:"<<"\n";
+        cout<<"5 for delete at end:"<<"\n";
+        cout<<"6 for delete the node have the given value:"<<"\n";
+        cout<<"7 for print the linked list:"<<"\n";
+        cout<<"8 for reverse the list:"<<"\n";
+        cout<<"9 for exit the program"<<"\n";
+        cout<<"Enter the choice:"<<"\n";
+        cin>>choice;
+        
+        switch(choice)
+        {
+            case 1:
+            cout<<"Enter the value to be inserted:"<<"\n";
+            cin>>val;
+            head=insertAtFirst(val,head);
+            break;
+            case 2:
+            cout<<"Enter the value to be inserted:"<<"\n";
+            cin>>val;
+            head=insertAtEnd(val,head);
+            break;
+            case 3:
+            cout<<"Enter the value and position:"<<"\n";
+            cin>>val;
+            cin>>pos;
+            insertAtPos(val,head,pos);
+            break;
+            case 4:
+            head=delAtFirst(head);
+            break;
+            case 5:
+            head=delAtEnd(head);
+            break;
+            case 6:
+            cout<<"Enter the value to be deleted:"<<"\n";
+            cin>>val;
+            deleteNode(&head,val);
+            break;
+            case 7:
+            printList(head);
+            break;
+            case 8:
+            head=reverseList(head);
+            break;
+            case 9:
+            return 0;
+            break;
+            default:
+            return 0;
+        }
+    }
+}
