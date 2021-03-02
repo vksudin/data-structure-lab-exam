@@ -1,69 +1,83 @@
-#include<iostream>
-#include<bits/stdc++.h>
-#include<cmath>
-#include<stack>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-float scanNum(char ch) {
-   int value;
-   value = ch;
-   return float(value-'0');  
-}
+class Stack {
+    int *arr, top, size;
+public:
+    Stack(int size) {
+        top = -1;
+        arr = new int[size];
+        this->size = size;
+    }
 
-int isOperator(char ch) {
-   if(ch == '+'|| ch == '-'|| ch == '*'|| ch == '/' || ch == '^')
-      return 1;  
-   return -1;   
-}
+    int isFull() {
+        if (top == size - 1)
+            return 1;
+        else
+            return 0;
+    }
 
-int isOperand(char ch) {
-   if(ch >= '0' && ch <= '9')
-      return 1;    
-   return -1;   
-}
+    int isEmpty() {
+        if (top == -1)
+            return 1;
+        else
+            return 0;
+    }
 
-int operation(int a, int b, char op) {
-   if(op == '+')
-      return b+a;
-   else if(op == '-')
-      return b-a;
-   else if(op == '*')
-      return b*a;
-   else if(op == '/')
-      return b/a;
-   else if(op == '^')
-      return pow(b,a);   
-   else
-      return INT_MIN;    
-}
+    void push(int num) {
+        if (!isFull()) {
+            top++;
+            arr[top] = num;
+        } else
+            cout << "Stack is full cannot make any more entries\n";
+    }
 
-int postfixEval(string postfix)
-{
-   int a, b;
-   stack<int> stk;
+    int pop() {
+        if (!isEmpty()) {
+            int num = arr[top];
+            top--;
+            return num;
+        } else {
+            cout << "Stack is empty no more popping possible\n";
+            return INT_MAX;
+        }
+    }
 
-   
-   int len=postfix.length();
+    int peek() {
+        return arr[top];
+    }
 
-   for(int i=0;i<len;i++)
-   {
-      if(isOperator(postfix[i])!=-1)
-      {
-         a = stk.top();
-         stk.pop();
-         b = stk.top();
-         stk.pop();
-         stk.push(operation(a,b,postfix[i]));
-      }
-      else if(isOperand(postfix[i])>0) 
-      {
-         stk.push(scanNum(postfix[i]));
-      }
-   }
-   return stk.top();
-}
+};
 
 int main() {
-   string post = "231*+9-";
-   cout<<"The result is:"<<postfixEval(post);
+    string infix;
+    cin >> infix;
+    Stack stack(100);
+    string postfix;
+    for (char ch : infix) {
+        if (ch >= '0' && ch <= '9')
+            stack.push(ch - '0');
+        else {
+            int a = stack.pop();
+            int b = stack.pop();
+            switch (ch) {
+                case '+':
+                    stack.push(a + b);
+                    break;
+                case '-':
+                    stack.push(b - a);
+                    break;
+                case '*':
+                    stack.push(a * b);
+                    break;
+                case '/':
+                    stack.push(b / a);
+                    break;
+            }
+        }
+    }
+    int ans = stack.pop();
+    cout << ans << "\n";
+    return 0;
 }
