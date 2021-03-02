@@ -9,7 +9,11 @@ class Deque{
   int front;
   int rear;
   int arr[size];
-  
+  Deque()
+  {
+    front=-1;
+    rear=-1;
+  }
   bool isFull()
   {
       if((front==0 && rear==size-1) || (front==rear+1))
