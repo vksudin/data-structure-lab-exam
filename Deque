@@ -1,0 +1,181 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+#define size 10
+
+class Deque{
+    public:
+  int front;
+  int rear;
+  int arr[size];
+  
+  bool isFull()
+  {
+      if((front==0 && rear==size-1) || (front==rear+1))
+      return true;
+      else
+      return false;
+  }
+  
+  bool isEmpty()
+  {
+      if(front==-1)
+      return true;
+      else
+      return false;
+  }
+  
+  
+  void insert_front(int x)
+  {
+    if(isFull())
+    {
+        cout<<"Queue is full:"<<"\n";
+        return;
+    }
+    if(front==-1)
+    {
+        front=0;
+        rear=0;
+    }
+    else if(front==0)
+    {
+        front=size-1;
+    }
+    else
+    front--;
+    
+    arr[front]=x;
+  }
+  
+  void insert_rear(int x)
+  {
+      if(isFull())
+      {
+          cout<<"Queue is full:"<<"\n";
+          return;
+      }
+      if(front==-1)
+      {
+          front=0;
+          rear=0;
+      }
+      else if(rear==size-1)
+      {
+          rear=0;
+      }
+      else
+      rear++;
+      
+      arr[rear]=x;
+  }
+  
+  void pop_front()
+  {
+      if(isEmpty())
+      {
+          cout<<"Queue is empty:"<<"\n";
+          return;
+      }
+       if(front==rear)
+       {
+           front=-1;
+           rear=-1;
+       }
+       else if(front==size-1)
+       front=0;
+       else
+       front++;
+  }
+  
+  void pop_pack()
+  {
+      if(isEmpty())
+      {
+          cout<<"Queue is empty:"<<"\n";
+          return;
+      }
+      if(front==rear)
+      {
+          front=-1;
+          rear=-1;
+      }
+      else if(rear==0)
+      rear=size-1;
+      else
+      rear--;
+  }
+  
+  void display()
+  {
+      int i=front;
+      
+      while(i!=rear)
+      {
+          cout<<arr[i]<<"\n";
+          i=(i+1)%size;
+      }
+      cout<<arr[rear]<<"\n";
+  }
+};
+
+
+int main()
+{
+    Deque c;
+    
+    int choice,val;
+    
+    while(1)
+    {
+        cout<<"1 for insert at front:"<<"\n";
+        cout<<"2 for insert at rear:"<<"\n";
+        cout<<"3 for pop_front:"<<"\n";
+        cout<<"4 for pop_pack:"<<"\n";
+        cout<<"5 for check full condition:"<<"\n";
+        cout<<"6 for check empty condition:"<<"\n";
+        cout<<"7 for display:"<<"\n";
+        cout<<"Any other number for stop the program:"<<"\n";
+        
+        cout<<"Enter choice:"<<"\n";
+        cin>>choice;
+        
+        switch(choice)
+        {
+            case 1:
+            cout<<"Enter the value:"<<"\n";
+            cin>>val;
+            c.insert_front(val);
+            break;
+            case 2:
+            cout<<"Enter the value:"<<"\n";
+            cin>>val;
+            c.insert_rear(val);
+            break;
+            case 3:
+            c.pop_front();
+            break;
+            case 4:
+            c.pop_pack();
+            break;
+            case 5:
+            if(c.isFull())
+            cout<<"Queue is full:"<<"\n";
+            else
+            cout<<"Queue is not full:"<<"\n";
+            break;
+            case 6:
+            if(c.isEmpty())
+            cout<<"Queue is empty:"<<"\n";
+            else
+            cout<<"Queue is not empty:"<<"\n";
+            break;
+            case 7:
+            c.display();
+            break;
+            default:
+            return 0;
+        }
+    }
+}
