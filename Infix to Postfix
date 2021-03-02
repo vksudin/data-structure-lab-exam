@@ -1,75 +1,103 @@
-#include<iostream>
-#include<bits/stdc++.h>
+# include <bits/stdc++.h>
+
 using namespace std;
 
-int PrecOfOperator(char c)
-{
-    if(c=='^')
-    return 3;
-    else if(c=='*' || c=='/')
-    return 2;
-    else if(c=='+' || c=='-')
-    return 1;
-    else
-    return -1;
-}
+class Stack {
+    char *arr, top, size;
+public:
+    Stack(int size) {
+        top = -1;
+        arr = new char[size];
+        this->size = size;
+    }
 
-void InfixToPostfix(string s)
-{
-    stack<char> st;
-    //st.push('$');
-    int len=s.length();
-    string res;
-    int i;
-    for(i=0;i<len;i++)
-    {
-        if((s[i]>='a' && s[i]<='z') || (s[i]>='A' && s[i]<='Z'))
-        {
-            res+=s[i];
-        }
-        else if(s[i]=='(')
-        {
-            st.push(s[i]);
-        }
-        else if(s[i]==')')
-        {
-            while(st.empty()==false && st.top()!='(')
-            {
-                char c=st.top();
-                res+=c;
-                st.pop();
-            }
-            if(st.top()=='(')
-            {
-                st.pop();
-            }
-        }
+    int isFull() {
+        if (top == size - 1)
+            return 1;
         else
-        {
-            while(st.empty()==false && PrecOfOperator(s[i])<=PrecOfOperator(st.top()))
-            {
-                char c=st.top();
-                res+=c;
-                st.pop();
-            }
-            st.push(s[i]);
+            return 0;
+    }
+
+    int isEmpty() {
+        if (top == -1)
+            return 1;
+        else
+            return 0;
+    }
+
+    void push(char ch) {
+        if (!isFull()) {
+            top++;
+            arr[top] = ch;
+        } else
+            cout << "Stack is full cannot make any more entries\n";
+    }
+
+    char pop() {
+        if (!isEmpty()) {
+            char ch = arr[top];
+            top--;
+            return ch;
+        } else {
+            cout << "Stack is empty no more popping possible\n";
+            char ch = '-';
+            return ch;
         }
     }
-    
-    while(st.empty()==false)
-    {
-        char c=st.top();
-        res+=c;
-        st.pop();
+
+    char peek() {
+        return arr[top];
     }
-    cout<<res<<"\n";
+
+};
+
+int precedence(char ch) {
+    if (ch == '+' || ch == '-')
+        return 1;
+    else if (ch == '*' || ch == '/')
+        return 2;
+    else if (ch == '^')
+        return 3;
+    return 0;
 }
 
-int main()
-{
-    string s="a+b*(c^d-e)^(f+g*h)-i";
-    
-    InfixToPostfix(s);
-    
-    
+int main() {
+    string infix;
+    cin >> infix;
+    Stack stack(100);
+    string postfix;
+    stack.push('#');
+    for (char ch : infix) {
+//        if (ch == ' ')continue;
+        if (ch >= 'a' && ch <= 'z')
+            postfix += ch;
+        else if (ch == '^')
+            stack.push(ch);
+        else if(ch == '(')
+            stack.push('(');
+        else if(ch == ')')
+        {
+            while(stack.peek() != '#' && stack.peek() != '(')
+            {
+                char top = stack.peek();
+                stack.pop();
+                postfix += top;
+            }
+            if(stack.peek() == '(')
+                stack.pop();
+        }
+        else {
+            if (precedence(ch) > precedence(stack.peek()))
+                stack.push(ch);
+            else {
+                while (stack.peek() != '#' && precedence(ch) <= precedence(stack.peek()))
+                    postfix += stack.pop();
+                stack.push(ch);
+            }
+        }
+    }
+    while (stack.peek() != '#')
+        postfix += stack.pop();
+    cout << postfix << "\n";
+    return 0;
 }
