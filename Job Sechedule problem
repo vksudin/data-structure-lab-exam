@@ -1,0 +1,113 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+struct Job{
+	int id;
+	int dead;
+	int profit;
+};
+
+
+
+void Swap(struct Job* a,struct Job* b)
+{
+    //First swap the id
+    int temp=a->id;
+    a->id=b->id;
+    b->id=temp;
+    //Second swap the deadlines
+    temp=a->dead;
+    a->dead=b->dead;
+    b->dead=temp;
+    //Third swap the profits
+    temp=a->profit;
+    a->profit=b->profit;
+    b->profit=temp;
+    
+}
+
+int partition(Job arr[],int l,int r)
+{
+	int pivot=arr[r].profit;
+	int i=l-1,j;
+	for(j=l;j<r;j++)
+	{
+		if(arr[j].profit<pivot)
+		{
+			i++;
+			swap(arr[i],arr[j]);
+		}
+	}
+	swap(arr[i+1],arr[r]);
+	return i+1;
+}
+
+void quick_sort(Job arr[],int l,int r)
+{
+	if(l<r)
+    {
+        int pi=partition(arr,l,r);
+        quick_sort(arr,l,pi-1);
+        quick_sort(arr,pi+1,r);
+    }
+}
+
+void Job_Schedule(Job arr[],int n) ///function for schedule the job
+{
+	quick_sort(arr,0,n-1);
+	int i,profit=0,maximum=0,j;
+	for(i=0;i<n;i++)
+	{
+		maximum=max(maximum,arr[i].dead); ///maximum is calculate for getting maximum deadline among
+	}                                     /// the all jobs
+	int slot[maximum+1];
+	for(i=0;i<=maximum;i++)
+	{
+		slot[i]=-1;
+	}
+	for(i=n-1;i>=0;i--)
+	{
+		for(j=arr[i].dead;j>0;j--)
+		{
+			if(slot[j]==-1)
+			{
+				slot[j]=i;
+				profit+=arr[i].profit;
+				break;
+			}
+		}
+	}
+	for(i=1;i<=maximum;i++)
+	{
+		if(slot[i]!=-1)
+		{
+			cout<<arr[slot[i]].id<<" ";
+		}
+	}
+	cout<<"\n";
+	
+	cout<<"Total profit is"<<"\n";
+	cout<<profit;
+	
+}
+
+int main()
+{
+	int n;
+	cout<<"Enter the number of jobs"<<"\n";
+	cin>>n;
+	Job arr[n];
+	int i;
+	cout<<"Enter the id deadline profit of every job"<<"\n";
+	
+	
+	for(i=0;i<n;i++)  /// Take the input of n number of jobs id,dead,profit
+	{
+		cin>>arr[i].id;
+		cin>>arr[i].dead;
+		cin>>arr[i].profit;
+	}
+	
+	
+	Job_Schedule(arr,n);
+}
