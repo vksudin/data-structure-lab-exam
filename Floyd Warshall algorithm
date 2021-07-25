@@ -1,5 +1,6 @@
 #include<iostream>
 #include<bits/stdc++.h>
+#include<fstream>
 using namespace std;
 void Flyod_Warshall(int **adj,int v)
 {
@@ -31,7 +32,7 @@ void Flyod_Warshall(int **adj,int v)
 	{
 		if(dist[i][i]<0)
 		{
-			cout<<"Negative edge cycle detected"<<"\n";
+			cout<<"Negative edge  weight cycle detected"<<"\n";
 			return;
 		}
 	}
@@ -40,18 +41,26 @@ void Flyod_Warshall(int **adj,int v)
 	{
 		for(j=0;j<v;j++)
 		{
-			cout<<"The distance between "<<i<<" and"<<j<<" is "<<dist[i][j]<<"\n";
+			cout<<"The distance between "<<i<<" and "<<j<<" is "<<dist[i][j]<<"\n";
 		}
 		cout<<"\n";
 	}
 }
 int main()
 {
+	fstream infile;
+	
+	infile.open("C:\\Users\\sudin jana\\Desktop\\data structure and algorithm\\graph\\Flyod_warshall_algo.txt",ios::in);
 	int n,i,j,e;//number
+	if (!infile)
+       {
+        cout << "Error to open the file";
+        return 1;
+       }
 	cout<<"Enter the number of vertices"<<"\n";
-	cin>>n;
+	infile>>n;
 	cout<<"Enter the number of edges"<<"\n";
-	cin>>e;
+	infile>>e;
 	int u,v,wt;
 	int **adj=new int*[n];
 	for(i=0;i<n;i++)
@@ -62,19 +71,10 @@ int main()
 	{
 		for(j=0;j<n;j++)
 		{
-			if(i==j)
-			adj[i][j]=0;
-			else
-			{
-				adj[i][j]=INT_MAX;
-			}
+			infile>>adj[i][j];
 		}	
 	}
 	cout<<"Enter the all edges and their weight"<<"\n";
-	for(i=0;i<e;i++)
-	{
-		cin>>u>>v>>wt;
-		adj[u][v]=wt;
-	}
+	
 	Flyod_Warshall(adj,n);
 }
