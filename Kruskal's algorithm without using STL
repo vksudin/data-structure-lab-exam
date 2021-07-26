@@ -8,21 +8,21 @@ struct node{
 	int u;
 	int v;
 	int wt;
-	node(int first,int second,int weight)
-	{
-		u=first;
-		v=second;
-		wt=weight;
-	}
+//	node(int first,int second,int weight)
+//	{
+//		u=first;
+//		v=second;
+//		wt=weight;
+//	}
 };
 struct Pair{
     int first;
     int second;
-    Pair(int a,int b)
-    {
-        first=a;
-        second=b;
-    }
+//    Pair(int a,int b)
+//    {
+//        first=a;
+//        second=b;
+//    }
 };
 bool comp(node a,node b)
 {
@@ -46,14 +46,14 @@ void Swap(struct node* a,struct node* b)
     
 }
 
-int findPar(int u,vector<int>& parent)
+int findPar(int u,int parent[])
 {
 	if(parent[u]==u)
 	return u;
 	return parent[u]=findPar(parent[u],parent);
 }
 
-void Union(int u,int v,vector<int>& parent,vector<int>& rank)
+void Union(int u,int v,int parent[],int rank[])
 {
 	u=findPar(u,parent);
 	v=findPar(v,parent);
@@ -73,7 +73,7 @@ void Union(int u,int v,vector<int>& parent,vector<int>& rank)
 	
 }
 
-int partition(vector<node>& edges,int l,int r)
+int partition(node edges[],int l,int r)
 {
     int pivot=edges[r].wt;
     int i=l-1;
@@ -89,7 +89,7 @@ int partition(vector<node>& edges,int l,int r)
     return i+1;
 }
 
-void QuickSort(vector<node>& edges,int l,int r)
+void QuickSort(node edges[],int l,int r)
 {
     if(l<r)
     {
@@ -100,28 +100,38 @@ void QuickSort(vector<node>& edges,int l,int r)
 }
 int main()
 {
+	fstream infile;
+	
+	infile.open("Kruskals_algo.txt",ios::in);
+	if (!infile)
+    {
+        cout << "Error to open the file";
+        return 1;
+    }
 	int n,m;
 	cout<<"Enter the number of vertices and number of edges"<<"\n";
-	cin>>n>>m;
-	vector<node> edges;
+    infile>>n>>m;
+	node edges[m];
 	int i;
 	cout<<"Enter the all edges and their adjacent vertices and weight"<<"\n";
 	for(i=0;i<m;i++)
 	{
-		int u,v,wt;
-		cin>>u>>v>>wt;
-		edges.push_back(node(u,v,wt));
+		int u,v,wt;//0 1 4
+		infile>>u>>v>>wt;           
+		edges[i].u=u;
+		edges[i].v=v;
+		edges[i].wt=wt;    
 	}
 	
-	vector<int> parent;
+	int parent[n];
 	for(i=0;i<n;i++)
 	{
-		parent.push_back(i);
+		parent[i]=i;
 	}
-	for(i=0;i<n;i++)
-	parent[i]=i;
 	
-	vector<int> rank(n);
+	
+	int rank[n];
+	
 	QuickSort(edges,0,m-1);
 	
 	for(i=0;i<n;i++)
@@ -129,21 +139,23 @@ int main()
 	
 	int res=0;
 
-    vector<Pair> mst;
-	
+    Pair mst[n-1];
+	int k=0;
 	for(i=0;i<m;i++)
 	{
 		if(findPar(edges[i].u,parent)!=findPar(edges[i].v,parent))
 		{
 			res+=edges[i].wt;
 			Union(edges[i].u,edges[i].v,parent,rank);
-			mst.push_back(Pair(edges[i].u,edges[i].v));
+			mst[k].first=edges[i].u;
+			mst[k].second=edges[i].v;
+			k++;
 		}
 	}
 	cout<<"The cost of the spanning tree is"<<"\n";
 	cout<<res<<"\n";
 	cout<<"The tree is"<<"\n";
-	for(i=0;i<mst.size();i++)
+	for(i=0;i<k;i++)
 	{
 		cout<<mst[i].first<<" "<<mst[i].second<<"\n";
 	}
