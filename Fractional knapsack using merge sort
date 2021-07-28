@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+using namespace std;
+class Object{
+public:
+    int val, weight;
+    double key;
+    Object(){}
+    Object(int val, int weight){
+        this->val = val;
+        this->weight = weight;
+        this->key = (double )val/weight;
+    }
+    bool operator >=(Object const &obj){
+        return  key >= obj.key;
+    }
+};
+
+void merge(Object* items, int l, int m, int r){
+    int n1 = m-l+1, n2 = r-m;
+    Object* L = new Object[n1];
+    Object* R = new Object[n2];
+    for (int i = 0; i < n1; ++i) {
+        L[i] = items[i+l];
+    }
+    for (int i = 0; i < n2; ++i) {
+        R[i] = items[i+m+1];
+    }
+    int i = l, j = 0, k = 0;
+    for (; i < r && j < n1 && k< n2; ++i) {
+        if(L[j] >= R[k])
+            items[i] = L[j++];
+        else
+            items[i] = R[k++];
+    }
+    while (j < n1)
+        items[i++] = L[j++];
+    while (k < n2)
+        items[i++] = R[k++];
+}
+void mergeSort(Object* items, int l, int r){
+    if(l < r){
+        int m = l+ (r-l)/2;
+        mergeSort(items, l, m);
+        mergeSort(items, m+1, r);
+        merge(items, l, m, r);
+    }
+}
+double getMaxVal(Object *vals, int n , int w){
+//    sort(vals, vals+n, compare);
+    mergeSort(vals, 0, n-1);
+    double val = 0;
+    for (int i = 0; i < n; ++i) {
+        if (w - vals[i].weight >= 0){
+            w -= vals[i].weight;
+            val += vals[i].val;
+        }
+        else{
+            double frac = (double)w/vals[i].weight;
+            val += frac*vals[i].val;
+            break;
+        }
+    }
+    return val;
+}
+int main(){
+    int n, w;
+    cout << "Enter no of elements\n";
+    cin >> n;
+    cout << "Enter total weight\n";
+    cin >> w;
+    Object* items = new Object[n];
+    int vals[n], weights[n];
+    cout << "Enter values of all items\n";
+    for (int i = 0; i < n; ++i)
+        cin >> vals[i];
+    cout << "Enter weights of all items\n";
+    for(int i = 0; i < n; i++)
+        cin >> weights[i];
+    for (int i = 0; i < n; ++i) {
+        items[i] = Object(vals[i], weights[i]);
+    }
+    cout << "Maximum value possible is: "<< getMaxVal(items, n, w)<<"\n";
+}
