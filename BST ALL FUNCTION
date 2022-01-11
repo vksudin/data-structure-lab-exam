@@ -1,0 +1,187 @@
+#include <bits/stdc++.h>
+using namespace std;
+int cnt, externalNodes, height;
+class TreeNode{
+public:
+    int val;
+    TreeNode *left; TreeNode *right;
+    TreeNode(){};
+    TreeNode(int data){
+        val = data;
+        left = nullptr;
+        right = nullptr;
+    }
+    TreeNode(int data, TreeNode *left, TreeNode *right){
+        val = data;
+        this->left = left;
+        this->right = right;
+    }
+};
+TreeNode* insert(TreeNode *node, int val){
+    if(node == nullptr){
+        node = new TreeNode(val);
+        return node;
+    }
+    if(val < node->val)
+        node->left = insert(node->left, val);
+    else if(val > node->val)
+        node->right = insert(node->right, val);
+    return node;
+}
+void preorder(TreeNode* node){
+    if(node == nullptr)
+        return;
+    cout << node->val << " ";
+    preorder(node->left);
+    preorder(node->right);
+}
+void inorder(TreeNode* node){
+    if (node == nullptr)
+        return;
+    inorder(node->left);
+    cout << node->val << " ";
+    inorder(node->right);
+}
+void postorder(TreeNode* node){
+    if (node == nullptr)
+        return;
+    postorder(node->left);
+    postorder(node->right);
+    cout << node->val << " ";
+}
+int getMin(TreeNode* node){
+    if (node == nullptr)
+        return INT_MIN;
+    if (node->left == nullptr)
+        return node->val;
+    return getMin(node->left);
+}
+int getMax(TreeNode* node){
+    if(node == nullptr)
+        return INT_MAX;
+    if (node->right == nullptr)
+        return node->val;
+    return getMax(node->right);
+}
+TreeNode* deleteNode(TreeNode* node, int val){
+    if (node == nullptr)
+        return node;
+    if (val < node->val)
+        node->left = deleteNode(node->left, val);
+    else if(val > node->val)
+        node->right = deleteNode(node->right, val);
+    else{
+        TreeNode *tempNode;
+        if(node->left == nullptr){
+            tempNode = node->left;
+            delete node;
+            return tempNode;
+        }
+        else if(node->right == nullptr){
+            tempNode = node->right;
+            delete node;
+            return tempNode;
+        }
+        node->val = getMin(node->right);
+        node->right = deleteNode(node->right, node->val);
+    }
+    return node;
+}
+void dfs(TreeNode *node, int level){
+    if(node == nullptr)
+        return;
+    cnt++;
+    if (node->left == nullptr && node->right == nullptr) {
+        externalNodes++;
+        height = max(height, level);
+    }
+    dfs(node->left, level+1);
+    dfs(node->right, level+1);
+}
+int getTotalNumberOfNodes(TreeNode *node){
+    cnt = 0;
+    dfs(node, 0);
+    return cnt;
+}
+int getExternalNodes(TreeNode* node){
+    externalNodes = 0;
+    dfs(node, 0);
+    return externalNodes;
+}
+int getInternalNodes(TreeNode *node){
+    externalNodes = 0;
+    cnt = 0;
+    dfs(node, 0);
+    return cnt - externalNodes;
+}
+int getHeight(TreeNode *node){
+    height = 0;
+    dfs(node, 0);
+    return height;
+}
+int main() {
+    TreeNode *root = nullptr;
+    int val;
+    while(true){
+        if (root != nullptr)
+            cout << "root val is " << root->val << "\n";
+        cout << "1. Insert Element\n";
+        cout << "2. Preorder Traversal\n";
+        cout << "3. Inorder Traversal\n";
+        cout << "4. Postorder Traversal\n";
+        cout << "5. Find the smallest element\n";
+        cout << "6. Find the largest element\n";
+        cout << "7. Delete an element\n";
+        cout << "8. Count the total number of nodes\n";
+        cout << "9. Count the total number of external nodes\n";
+        cout << "10. Count the total number of internal nodes\n";
+        cout << "11. Determine the height of the tree\n";
+        cout << "Press any other number to quit\n";
+        int choice;
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                cout << "Enter value to be inserted\n";
+                cin >> val;
+                root = insert(root, val);
+                break;
+            case 2:
+                preorder(root);
+                cout << "\n";
+                break;
+            case 3:
+                inorder(root);
+                cout << "\n";
+                break;
+            case 4:
+                postorder(root);
+                cout << "\n";
+                break;
+            case 5:
+                cout << getMin(root) << "\n";
+                break;
+            case 6:
+                cout << getMax(root) << "\n";
+                break;
+            case 7:
+                cout << "Enter value to be deleted\n";
+                cin >> val;
+                root = deleteNode(root, val);
+                break;
+            case 8:
+                cout << getTotalNumberOfNodes(root) << "\n";
+                break;
+            case 9:
+                cout << getExternalNodes(root) << "\n";
+                break;
+            case 10:
+                cout << getInternalNodes(root) << "\n";
+                break;
+            case 11:
+                cout << getHeight(root) << "\n";
+                break;
+            default:
+                return 0;
+        }
+    }
+}
